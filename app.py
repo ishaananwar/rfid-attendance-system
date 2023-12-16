@@ -46,15 +46,6 @@ class Student(db.Model):
     sec = db.Column(db.String(1), unique = False, nullable = False)
     attendance = db.relationship('Attendance', back_populates='student')
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'fname': self.fname,
-            'lname': self.lname,
-            'grade': self.grade,
-            'sec': self.sec
-        }
-
 class Attendance(db.Model):
     rowid = db.Column(db.BigInteger(), primary_key=True, autoincrement=True)
     id = db.Column(db.Integer(), db.ForeignKey('student.id', ondelete='cascade', onupdate='cascade'), unique=False, nullable=False, autoincrement=False)
@@ -62,18 +53,6 @@ class Attendance(db.Model):
     time = db.Column(db.String(10), unique=False, nullable=False)
     type = db.Column(db.String(3), db.CheckConstraint("type = 'IN' OR type = 'OUT'"), unique=False, nullable=False)
     student = db.relationship('Student', back_populates='attendance')
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'fname': self.student.fname,
-            'lname': self.student.lname,
-            'grade': self.student.grade,
-            'sec': self.student.sec,
-            'date': str(self.date),
-            'time': str(self.time),
-            'type': self.type
-        }
 
 class RolesUsers(db.Model):
     __tablename__ = 'roles_users'
@@ -135,7 +114,16 @@ def attendances():
 @app.route('/attendances/data', methods=['GET', 'POST'])
 def attendancedata():
     try:
-        query = Attendance.query
+        query = db.session.query(
+            Attendance.id,
+            Student.fname,
+            Student.lname,
+            Student.grade,
+            Student.sec,
+            Attendance.date,
+            Attendance.time,
+            Attendance.type
+        ).filter(Student.id==Attendance.id)
         cols = ['id', 'fname', 'lname', 'grade', 'sec', 'date', 'time', 'type']
 
         search = request.args.get('search[value]')
@@ -152,7 +140,27 @@ def attendancedata():
             ))
         filtered = query.count()
     
-        query = Sort(query, Attendance, cols)
+        order = []
+        i = 0
+        while True:
+            col_index = request.args.get(f'order[{i}][column]')
+            if col_index is None:
+                break
+            col_name = request.args.get(f'columns[{col_index}][data]')
+            if col_name not in cols:
+                col_name = 'id'
+            descending = request.args.get(f'order[{i}][dir]') == 'desc'
+            if col_name in ['id', 'date', 'time', 'type']:
+                col = getattr(Attendance, col_name)
+            elif col_name in ['fname', 'lname', 'grade', 'sec']:
+                col = getattr(Student, col_name)
+            if descending:
+                col = col.desc()
+            order.append(col)
+            i += 1
+        if order:
+            query = query.order_by(*order)
+
         query = Pageinate(query)
 
         return jsonify({
