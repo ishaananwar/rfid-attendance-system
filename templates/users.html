@@ -62,7 +62,13 @@
             {
                 extend: 'selected',
                 text: 'Delete',
-                name: 'delete'
+                action: function() {
+                    $.ajax({
+                        url: "{{ url_for('userdelete') }}",
+                        type: 'GET',
+                        data: this.row({selected: true}).data()
+                    });
+                }
             },
             {
                 text: 'Refresh',
@@ -70,7 +76,7 @@
             }],
             onAddRow: function(datatable, rowdata, success, error) {
                 $.ajax({
-                    url: '/users/add',
+                    url: "{{ url_for('useradd') }}",
                     type: 'GET',
                     data: rowdata,
                     success: success,
@@ -79,16 +85,7 @@
             },
             onEditRow: function(datatable, rowdata, success, error) {
                 $.ajax({
-                    url: '/users/edit',
-                    type: 'GET',
-                    data: rowdata,
-                    success: success,
-                    error: error
-                });
-            },
-            onDeleteRow: function(datatable, rowdata, success, error) {
-                $.ajax({
-                    url: '/users/delete',
+                    url: "{{ url_for('useredit') }}",
                     type: 'GET',
                     data: rowdata,
                     success: success,

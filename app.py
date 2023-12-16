@@ -306,15 +306,12 @@ def studentedit():
         return redirect(url_for('students'))
     
 @app.route('/students/delete', methods=['GET'])
-def studentdeletedelete():
+def studentdelete():
     try:
         stuid = request.args.get('id')
-        target = Student.query.filter_by(id=stuid).first()
         Student.query.filter_by(id=stuid).delete()
         db.session.commit()
-        return jsonify({
-            'data': target.to_dict()
-        })
+        return '', 204
     except Exception as e:
         print(e)
         return redirect(url_for('students'))
@@ -370,7 +367,7 @@ def useradd():
         })
     except Exception as e:
         print(e)
-        return redirect(url_for('home'))
+        return redirect(url_for('users'))
 
 @app.route('/users/edit', methods=['GET'])
 def useredit():
@@ -391,21 +388,18 @@ def useredit():
         })
     except Exception as e:
         print(e)
-        return redirect(url_for('home'))
+        return redirect(url_for('users'))
     
 @app.route('/users/delete', methods=['GET'])
 def userdelete():
     try:
         userid = request.args.get('user_id')
-        target = User.query.filter_by(id=userid).first()
         User.query.filter_by(id=userid).delete()
         db.session.commit()
-        return jsonify({
-            'data': target.to_dict()
-        })
+        return '', 204
     except Exception as e:
         print(e)
-        return redirect(url_for('home'))
+        return redirect(url_for('users'))
 
 #—————————————————— Functions ——————————————————#
 
@@ -440,6 +434,8 @@ with app.app_context():
     user_datastore.find_or_create_role(name='admin')
     user_datastore.find_or_create_role(name='viewer')
     db.session.commit()
+    #user_datastore.create_user(username='ishaananwar', password=hash_password('admin@123'), roles=['admin'])
+    #db.session.commit()
 
 if __name__ == '__main__':
     app.run(host='192.168.1.5', port=5000)

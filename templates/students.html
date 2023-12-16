@@ -67,27 +67,21 @@
             {
                 extend: 'selected',
                 text: 'Delete',
-                name: 'delete'
+                action: function() {
+                    $.ajax({
+                        url: "{{ url_for('studentdelete') }}",
+                        type: 'GET',
+                        data: this.row({selected: true}).data()
+                    });
+                }
             },
             {
                 text: 'Refresh',
                 name: 'refresh'
             }],
-            onAddRow: function() {
-                window.location("{{ url_for('attendances') }}")
-            },
             onEditRow: function(datatable, rowdata, success, error) {
                 $.ajax({
-                    url: '/students/edit',
-                    type: 'GET',
-                    data: rowdata,
-                    success: success,
-                    error: error
-                });
-            },
-            onDeleteRow: function(datatable, rowdata, success, error) {
-                $.ajax({
-                    url: '/students/delete',
+                    url: "{{ url_for('studentedit') }}",
                     type: 'GET',
                     data: rowdata,
                     success: success,
