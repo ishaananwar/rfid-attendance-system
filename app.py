@@ -46,6 +46,15 @@ class Student(db.Model):
     sec = db.Column(db.String(1), unique = False, nullable = False)
     attendance = db.relationship('Attendance', back_populates='student')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'fname': self.fname,
+            'lname': self.lname,
+            'grade': self.grade,
+            'sec': self.sec
+        }
+
 class Attendance(db.Model):
     rowid = db.Column(db.BigInteger(), primary_key=True, autoincrement=True)
     id = db.Column(db.Integer(), db.ForeignKey('student.id', ondelete='cascade', onupdate='cascade'), unique=False, nullable=False, autoincrement=False)
