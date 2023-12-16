@@ -434,8 +434,6 @@ with app.app_context():
     user_datastore.find_or_create_role(name='admin')
     user_datastore.find_or_create_role(name='viewer')
     db.session.commit()
-    #user_datastore.create_user(username='ishaananwar', password=hash_password('admin@123'), roles=['admin'])
-    #db.session.commit()
 
 if __name__ == '__main__':
     app.run(host='192.168.1.5', port=5000)
