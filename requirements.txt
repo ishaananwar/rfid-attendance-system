@@ -1,0 +1,12 @@
+python-dotenv
+pytz
+datetime
+requests
+urllib3
+mysqlclient
+flask
+flask-sqlalchemy
+flask-wtf
+flask-security-too
+bcrypt
+bleach

@@ -1,0 +1,68 @@
+{% extends "base_table.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex flex-column p-3 text-dark bg-white">
+        <table id="data" class="table table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Class</th>
+                    <th>Section</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#data').DataTable({
+            ajax: "{{ url_for('attendancedata') }}",
+            serverSide: true,
+            columns: [
+                {data: 'id'},
+                {data: 'fname'},
+                {data: 'lname'},
+                {data: 'grade'},
+                {data: 'sec'},
+                {data: 'date'},
+                {data: 'time'},
+                {data: 'type'}
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'excelHtml5',
+                'csvHtml5'
+            ]
+        });
+    });
+</script>
+{% endblock %}
+
+{% block navbar %}
+<li class="nav-item">
+    <a class="nav-link active" href="{{ url_for('attendances') }}" aria-current="page">Attendances</a>
+</li>
+{% if role == '<Role 1>' %}
+    <li>
+        <a class="nav-link text-white" href="{{ url_for('students') }}">Students</a>
+    </li>
+    <li>
+        <a class="nav-link text-white" href="{{ url_for('users') }}">Users</a>
+    </li>
+{% endif %}
+{% endblock %}
+
+{% block user %}
+<strong>{{ username }}</strong>
+{% endblock %}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/jszip-3.10.1/dt-1.13.8/b-2.4.2/b-html5-2.4.2/r-2.5.0/sl-1.7.0/datatables.min.css" rel="stylesheet">
+        <link href="{{ url_for('.static', filename='app.css') }}" rel="stylesheet">
+    </head>
+    <body>
+        <main>
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 200px;">
+                <ul class="nav nav-pills flex-column mb-auto">
+                    {% block navbar %}{% endblock %}
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% block user %}{% endblock %}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="b-example-divider"></div>
+            {% block content %}{% endblock %}
+            <div class="b-example-divider"></div>
+        </main>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/jszip-3.10.1/dt-1.13.8/b-2.4.2/b-html5-2.4.2/r-2.5.0/sl-1.7.0/datatables.min.js"></script>
+        <script src="{{ url_for('.static', filename='sidebars.js') }}"></script>
+        <script src="{{ url_for('.static', filename='dataTables.altEditor.free.js') }}"></script>
+        {% block scripts %}{% endblock %}
+    </body>
+</html>

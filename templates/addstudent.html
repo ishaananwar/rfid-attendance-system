@@ -1,0 +1,49 @@
+{% extends "base_form.html" %}
+
+{% block content %}
+<div class="m-3">
+    <h2>Add Student</h2>
+</div>
+<div class="container-fluid">
+    <form action="{{ url_for('studentadd') }}" method="post">
+        <div class="mx-5 my-3">
+            <div class="mb-3 w-50">
+                {{ form.id.label(class_="form-label") }}
+                {{ form.id(class_="form-control disabled-input", type_="text") }}
+            </div>
+            <div class="mb-3 w-50">
+                {{ form.fname.label(class_="form-label") }}
+                {{ form.fname(class_="form-control") }}
+            </div>
+            <div class="mb-3 w-50">
+                {{ form.lname.label(class_="form-label") }}
+                {{ form.lname(class_="form-control") }}
+            </div>
+            <div class="mb-3 w-50">
+                {{ form.grade.label(class_="form-label") }}
+                {{ form.grade(class_="form-control", type_="text") }}
+            </div>
+            <div class="mb-3 w-50">
+                {{ form.sec.label(class_="form-label") }}
+                {{ form.sec(class_="form-control") }}
+            </div>
+            {{ form.submit(class_="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const interval = setInterval(function () {
+        var element = document.getElementById("uid");
+        $.getJSON("{{ url_for('studentgetuid') }}", function(data) {
+            var newUID = data.id
+            if (newUID != 0) {
+                console.log(newUID)
+                element.setAttribute('value', newUID)
+            }
+        });
+    }, 5000);
+</script>
+{% endblock %}

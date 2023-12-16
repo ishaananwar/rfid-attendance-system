@@ -1,0 +1,113 @@
+{% extends "base_table.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-dark bg-white">
+        <table id="data" class="table table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#data').DataTable({
+            ajax: "{{ url_for('userdata') }}",
+            serverSide: true,
+            columns: [
+                {
+                    data: 'user_id',
+                    title: 'User ID',
+                    type: 'readonly'
+                },
+                {
+                    data: 'username',
+                    title: 'Username',
+                },
+                {
+                    data: 'role',
+                    title: 'Role',
+                    type: 'select',
+                    options: ['admin', 'viewer']
+                },
+                {
+                    data: 'password',
+                    title: 'Password',
+                    visible: false
+                }
+            ],
+            dom: 'Bfrtip',
+            select: 'single',
+            responsive: true,
+            altEditor: true,
+            buttons: [{
+                text: 'Add',
+                name: 'add'
+            },
+            {
+                extend: 'selected',
+                text: 'Edit',
+                name: 'edit'
+            },
+            {
+                extend: 'selected',
+                text: 'Delete',
+                name: 'delete'
+            }],
+            onAddRow: function(datatable, rowdata, success, error) {
+                $.ajax({
+                    url: '/users/add',
+                    type: 'GET',
+                    data: rowdata,
+                    success: success,
+                    error: error
+                });
+            },
+            onEditRow: function(datatable, rowdata, success, error) {
+                $.ajax({
+                    url: '/users/edit',
+                    type: 'GET',
+                    data: rowdata,
+                    success: success,
+                    error: error
+                });
+            },
+            onDeleteRow: function(datatable, rowdata, success, error) {
+                $.ajax({
+                    url: '/users/delete',
+                    type: 'GET',
+                    data: rowdata,
+                    success: success,
+                    error: error
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block navbar %}
+<li>
+    <a class="nav-link text-white" href="{{ url_for('attendances') }}">Attendances</a>
+</li>
+<li>
+    <a class="nav-link text-white" href="{{ url_for('students') }}">Students</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link active" href="{{ url_for('users') }}" aria-current="page">Users</a>
+</li>
+{% endblock %}
+
+{% block user %}
+<strong>{{ username }}</strong>
+{% endblock %}

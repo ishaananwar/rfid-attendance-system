@@ -1,0 +1,112 @@
+{% extends "base_table.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-dark bg-white">
+        <table id="data" class="table table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Class</th>
+                    <th>Section</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#data').DataTable({
+            ajax: "{{ url_for('studentdata') }}",
+            serverSide: true,
+            columns: [
+                {
+                    data: 'id',
+                    title: 'ID',
+                    type: 'readonly'
+                },
+                {
+                    data: 'fname',
+                    title: 'First Name'
+                },
+                {
+                    data: 'lname',
+                    title: 'Last Name'
+                },
+                {
+                    data: 'grade',
+                    title: 'Class'
+                },
+                {
+                    data: 'sec',
+                    title: 'Section'
+                }
+                ],
+            dom: 'Bfrtip',
+            select: 'single',
+            responsive: true,
+            altEditor: true,
+            buttons: [{
+                text: 'Add',
+                action: function(datatable) {
+                    window.location.href = "{{ url_for('studentadd') }}"
+                }
+            },
+            {
+                extend: 'selected',
+                text: 'Edit',
+                name: 'edit'
+            },
+            {
+                extend: 'selected',
+                text: 'Delete',
+                name: 'delete'
+            }],
+            onAddRow: function() {
+                window.location("{{ url_for('attendances') }}")
+            },
+            onEditRow: function(datatable, rowdata, success, error) {
+                $.ajax({
+                    url: '/students/edit',
+                    type: 'GET',
+                    data: rowdata,
+                    success: success,
+                    error: error
+                });
+            },
+            onDeleteRow: function(datatable, rowdata, success, error) {
+                $.ajax({
+                    url: '/students/delete',
+                    type: 'GET',
+                    data: rowdata,
+                    success: success,
+                    error: error
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block navbar %}
+<li>
+    <a class="nav-link text-white" href="{{ url_for('attendances') }}">Attendances</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link active" href="{{ url_for('students') }}" aria-current="page">Students</a>
+</li>
+<li>
+    <a class="nav-link text-white" href="{{ url_for('users') }}">Users</a>
+</li>
+{% endblock %}
+
+{% block user %}
+<strong>{{ username }}</strong>
+{% endblock %}

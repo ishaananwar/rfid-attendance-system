@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="{{ url_for('.static', filename='app.css') }}" rel="stylesheet">
+    </head>
+    <body>
+        {% block content %}{% endblock %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        {% block scripts %}{% endblock %}
+    </body>
+</html>
